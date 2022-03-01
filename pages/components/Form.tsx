@@ -3,13 +3,15 @@ import { useInputState } from '@mantine/hooks';
 import useGetName from "hooks/useGetName";
 import { NextPage } from "next"
 import React, {useRef, useState} from "react"
+import { db } from "../../firebase/clientApp";
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import styles from '../components/component.module.css'
 
 interface Props {
   setStudentPassRequest: React.Dispatch<React.SetStateAction<any>>;
   setPassRequested: React.Dispatch<React.SetStateAction<any>>;
 }
-
+const passesCollectionRef = collection(db, "passes")
 
 
 
@@ -19,14 +21,17 @@ const Form: NextPage<Props> = (props) => {
     const [error, setError] = useState("")
 
     
-    const submitHandler = () => { 
+    const submitHandler = async () => { 
       if(studentIdInput != undefined && useGetName(studentIdInput) === undefined){
         setError(()=>"Enter valid student ID")
         return
       }
       setError("")
+      const userDoc = query(passesCollectionRef, where("studentID", "==",studentIdInput))
+      await (await getDocs(userDoc)).forEach(user => {
+        props.setStudentPassRequest(user.data()) 
+      })
       props.setPassRequested(true)
-      props.setStudentPassRequest({studentID : studentIdInput, pickupLocation : campus, requestTime : getTime()}) 
     }
     
     const getTime = () : number => {

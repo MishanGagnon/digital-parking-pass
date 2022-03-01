@@ -9,10 +9,10 @@ interface studentPassRequest{
     requestTime : number | null
   }
 
+const passesCollectionRef = collection(db, "passes")
 const Index = () => {
     const [firebaseData, setFirebaseData] = useState<studentPassRequest[] | any>([])
     const [recievedData, setRecievedData] = useState(false)
-    const passesCollectionRef = collection(db, "passes")
 
     // maps through firebase document and loads all students
     const activeStudentCards = () => {
