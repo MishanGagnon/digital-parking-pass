@@ -1,7 +1,8 @@
 import { Button, NumberInput, InputWrapper, NativeSelect, Group } from "@mantine/core"
 import { useInputState } from '@mantine/hooks';
+import useGetName from "hooks/useGetName";
 import { NextPage } from "next"
-import React, {useState} from "react"
+import React, {useRef, useState} from "react"
 import styles from '../components/component.module.css'
 
 interface Props {
@@ -13,17 +14,23 @@ interface Props {
 
 
 const Form: NextPage<Props> = (props) => {
-    const [studentIdInput, setStudentIdInput] = useInputState<number>(0)
+    const [studentIdInput, setStudentIdInput] = useInputState<number | undefined>(undefined)
     const [campus, setCampus] = useState("LaSalle")
+    const [error, setError] = useState("")
 
-
+    
     const submitHandler = () => { 
+      if(studentIdInput != undefined && useGetName(studentIdInput) === undefined){
+        setError(()=>"Enter valid student ID")
+        return
+      }
+      setError("")
       props.setPassRequested(true)
       props.setStudentPassRequest({studentID : studentIdInput, pickupLocation : campus, requestTime : getTime()}) 
     }
     
-    const getTime = () : Date => {
-      return new Date()
+    const getTime = () : number => {
+      return new Date().getTime()
     }
     
     return (
@@ -33,6 +40,7 @@ const Form: NextPage<Props> = (props) => {
             id="student-id"
             required
             label="Student ID"
+            error = {error}
             >
             <NumberInput id="input-demo" placeholder="Your student ID number" value = {studentIdInput} onChange = {setStudentIdInput}/>
           </InputWrapper>

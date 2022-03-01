@@ -9,7 +9,7 @@ interface Props {
   studentPassRequest : { 
     studentID : number, 
     pickupLocation : string,
-    requestTime : Date | null
+    requestTime : number | null
   }
 }
 
@@ -23,9 +23,15 @@ const StudentCard: NextPage<Props> = (props) => {
             alt="Random unsplash image"
             />
             <Group direction = "column" spacing = "xs">
-              <h1>{useGetName(props.studentPassRequest.studentID)}</h1>
-              <p>Requested at {props.studentPassRequest.requestTime.toLocaleString()}</p>
-              <p>Pickup at {props.studentPassRequest.pickupLocation}</p>
+              {props.studentPassRequest.requestTime ?  
+              
+              (<div>
+                  <h1>{useGetName(props.studentPassRequest.studentID)}</h1>
+                  <p>Requested at {new Date(props.studentPassRequest.requestTime * 1000).toLocaleTimeString()}</p>
+                  <p>Pickup at {props.studentPassRequest.pickupLocation}</p>
+              </div>
+              )
+              : ""}
             </Group>
         </Group>
       </div>

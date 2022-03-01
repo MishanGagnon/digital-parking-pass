@@ -356,7 +356,7 @@ const students : {[key : string] : string} = {
     "222776": "Ariana Zhao",
     "222975": "Lorance Wong"
 }
-const useGetName = (studentID : number) : string => {
+const useGetName = (studentID : number) : string | undefined => {
     return students[studentID.toString()];
 }
 
