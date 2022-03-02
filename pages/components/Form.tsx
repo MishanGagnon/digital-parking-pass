@@ -4,8 +4,9 @@ import useGetName from "hooks/useGetName";
 import { NextPage } from "next"
 import React, {useRef, useState} from "react"
 import { db } from "../../firebase/clientApp";
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { collection, getDocs, query, where, setDoc, doc } from 'firebase/firestore'
 import styles from '../components/component.module.css'
+import useUpdateDocument from "hooks/useUpdateDocument";
 
 interface Props {
   setStudentPassRequest: React.Dispatch<React.SetStateAction<any>>;
@@ -27,6 +28,7 @@ const Form: NextPage<Props> = (props) => {
         return
       }
       setError("")
+      useUpdateDocument(studentIdInput, campus, getTime(), true)
       const userDoc = query(passesCollectionRef, where("studentID", "==",studentIdInput))
       await (await getDocs(userDoc)).forEach(user => {
         props.setStudentPassRequest(user.data()) 

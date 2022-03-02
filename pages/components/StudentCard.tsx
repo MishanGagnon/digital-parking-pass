@@ -2,7 +2,6 @@ import { Group, Image } from "@mantine/core"
 import { NextPage } from "next"
 import React from "react"
 import styles from '../components/component.module.css'
-import image from '.../public/images/222232.jpg'
 import useGetName from "hooks/useGetName"
 
 interface Props {
@@ -18,6 +17,7 @@ const StudentCard: NextPage<Props> = (props) => {
       <div className = {styles.container}>
         <Group>
           <Image
+            width = {120}
             radius="md"
             src={`/images/${props.studentPassRequest.studentID}.jpg`}
             alt="Random unsplash image"
