@@ -17,6 +17,6 @@
     "baseUrl": "./pages",
     "checkJs": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/office/index.js", "pages/office/index.js", "pages/context/UseAuthContext.jsx"],
   "exclude": ["node_modules"]
 }

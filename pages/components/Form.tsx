@@ -18,19 +18,23 @@ const passesCollectionRef = collection(db, "passes")
 
 const Form: NextPage<Props> = (props) => {
     const [studentIdInput, setStudentIdInput] = useInputState<number | undefined>(undefined)
-    const [campus, setCampus] = useState("LaSalle")
     const [error, setError] = useState("")
 
     
     const submitHandler = async () => { 
+      if(studentIdInput === 69){
+        setError(()=>"nice")
+        return
+      }
       if(studentIdInput != undefined && useGetName(studentIdInput) === undefined){
         setError(()=>"Enter valid student ID")
         return
       }
       setError("")
-      useUpdateDocument(studentIdInput, campus, getTime(), true)
+      useUpdateDocument(studentIdInput, "not selected", getTime())
       const userDoc = query(passesCollectionRef, where("studentID", "==",studentIdInput))
       await (await getDocs(userDoc)).forEach(user => {
+        console.log(user.data())
         props.setStudentPassRequest(user.data()) 
       })
       props.setPassRequested(true)
@@ -40,6 +44,9 @@ const Form: NextPage<Props> = (props) => {
       return new Date().getTime()
     }
     
+    //dont auto submit the form, show the student card and show the status of whether or not 
+    // pass was accepted or rejected and then allow the student to request a new pass from there
+
     return (
       <div className = {styles.container}>
         <Group position = "center">
@@ -51,16 +58,6 @@ const Form: NextPage<Props> = (props) => {
             >
             <NumberInput id="input-demo" placeholder="Your student ID number" value = {studentIdInput} onChange = {setStudentIdInput}/>
           </InputWrapper>
-          <NativeSelect
-          data={[
-            { value: 'LaSalle', label: 'LaSalle' },
-            { value: 'DePaul', label: 'DePaul' }
-          ]}
-          onChange = {e => setCampus(e.target.value)}
-          placeholder="Pick one"
-          label="Select campus to pick up pass"
-          radius="xs"
-          />
           <Button onClick = {submitHandler}>Submit
           </Button>
         </Group>

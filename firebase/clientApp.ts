@@ -1,5 +1,6 @@
 import {initializeApp} from 'firebase/app'
 import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth'
 
 const clientCreds = {
     apiKey: process.env.API_KEY,
@@ -13,4 +14,5 @@ const clientCreds = {
 
   const app = initializeApp(clientCreds)
   export const db = getFirestore()
+  export const auth = getAuth(app)
 
