@@ -12,6 +12,8 @@ interface studentPassRequest{
     pickupLocation : string
     requestTime : number
     offCampus : boolean
+    name : string
+    email : string
   }
 
 
@@ -36,7 +38,7 @@ const Index = () => {
       }
 
     const handleDelete = (studentPass: studentPassRequest ) => {
-        useUpdateDocument(studentPass.studentID, studentPass.pickupLocation, studentPass.requestTime, false)
+        useUpdateDocument(studentPass.studentID, studentPass.pickupLocation, studentPass.requestTime, false, studentPass.name, studentPass.email)
     }
 
 

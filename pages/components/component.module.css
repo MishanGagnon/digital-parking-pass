@@ -5,5 +5,5 @@
   }
 
 .card { 
-  width: clamp(400px, 50vw, 50vw);
+  width: clamp(20rem, auto, 70rem);
 }
