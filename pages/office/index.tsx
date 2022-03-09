@@ -38,7 +38,8 @@ const Index = () => {
       }
 
     const handleDelete = (studentPass: studentPassRequest ) => {
-        useUpdateDocument(studentPass.studentID, studentPass.pickupLocation, studentPass.requestTime, false, studentPass.name, studentPass.email)
+        studentPass.offCampus = false
+        useUpdateDocument({...studentPass})
     }
 
 
@@ -67,7 +68,6 @@ const Index = () => {
         getStudents()
     },[])
 
-    //  <motion.div key = {firebaseData} variants = {variants} animate={'show'} initial="hide">
     return(
         <>
             <h1 style = {{textAlign : "center"}}>Students Currently off Campus </h1>

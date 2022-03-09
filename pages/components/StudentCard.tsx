@@ -9,22 +9,26 @@ import useGetName from "hooks/useGetName"
 interface studentPassRequest {
   studentID: number,
   pickupLocation: string,
-  requestTime: number | null
+  requestTime: number
   offCampus: boolean
+  name: string 
+  email: string
 }
 interface Props {
   studentPassRequest: studentPassRequest
   studentPassType: boolean
   buttonFunction: any
   requestPassButton?: any
-  setStudentPassRequest: React.Dispatch<React.SetStateAction<studentPassRequest>>
+  setStudentPassRequest?: React.Dispatch<React.SetStateAction<studentPassRequest>>
 }
 
 
 const StudentCard: NextPage<Props> = (props) => {
-  console.log(props.studentPassType, "top")
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
+    if(props.studentPassType && props.setStudentPassRequest != undefined){
+      props.setStudentPassRequest((prevState) => {prevState.pickupLocation = 'LaSalle'; return prevState})
+    }
     setMounted((true))
   }, [])
 
@@ -41,7 +45,8 @@ const StudentCard: NextPage<Props> = (props) => {
   }
 
   const formChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    props.setStudentPassRequest((prevState) => prevState = { studentID: props.studentPassRequest.studentID, pickupLocation: e.target.value, requestTime: props.studentPassRequest.requestTime, offCampus: props.studentPassRequest.offCampus })
+    if(props.setStudentPassRequest === undefined){return}
+    props.setStudentPassRequest((prevState) => {prevState.pickupLocation = e.target.value; return prevState})
   }
   //add student id to student card
   return (

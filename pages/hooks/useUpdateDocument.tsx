@@ -10,18 +10,18 @@ interface requestObj {
     name? : string, 
     email? : string
 }
-const useUpdateDocument = async (studentID : number, pickupLocation: string, requestTime : number, offCampus? : boolean, name? : string, email? : string) => {
+const useUpdateDocument = async (updateObj : requestObj) => {
     try{
         let requestObject : requestObj= {
-            studentID : studentID,
-            pickupLocation : pickupLocation,
-            requestTime : requestTime
+            studentID : updateObj.studentID,
+            pickupLocation : updateObj.pickupLocation,
+            requestTime : updateObj.requestTime
         }
-        offCampus != undefined ? requestObject.offCampus = offCampus : '';
-        name ? requestObject.name = name : '';
-        email ? requestObject.email = email : '';
+        updateObj.offCampus != undefined ? requestObject.offCampus = updateObj.offCampus : '';
+        updateObj.name ? requestObject.name = updateObj.name : '';
+        updateObj.email ? requestObject.email = updateObj.email : '';
         console.log(requestObject)
-        await setDoc(doc(db, "passes", studentID.toString()), requestObject)
+        await setDoc(doc(db, "passes", updateObj.studentID.toString()), requestObject)
     }catch{
         return false
     }

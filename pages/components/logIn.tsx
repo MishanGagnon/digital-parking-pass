@@ -1,4 +1,4 @@
-import { Button, Container, Group, Text, Image, Center } from "@mantine/core"
+import { Button, Container, Group, Text, Image, Center, Menu } from "@mantine/core"
 import { signOut } from "firebase/auth"
 import { NextPage } from "next"
 import React from "react"
@@ -10,12 +10,6 @@ import { useAuthState, useSignInWithGoogle } from 'react-firebase-hooks/auth'
 
 const LogIn: NextPage = ({ children }) => {
   const [user, loading, error] = useAuthState(auth)
-  if (error) {
-    console.log(error)
-  }
-  if (loading) {
-    console.log("loading")
-  }
   if (user) {
     console.log(user)
   }
@@ -26,14 +20,10 @@ const LogIn: NextPage = ({ children }) => {
           {
             <div>
               <>
-                <Group direction="row">
-                  <Group direction="column" spacing={0}>
-                    <Text weight={700}>Signed in as </Text>
-                    <Text weight={700}>{user.displayName}</Text>
-                  </Group>
-                  <Image radius={30} withPlaceholder width={50} src={user.photoURL != null ? user.photoURL : ""}></Image>
-                </Group>
-                <Button size={'sm'} onClick={() => signOut(auth)}>Sign Out</Button>
+              <Menu control = {<Image radius={30} withPlaceholder width={50} src={user.photoURL != null ? user.photoURL : ""}/>} >
+                <Menu.Label>Signed in as {user.displayName}</Menu.Label>
+                <Menu.Item onClick={() => signOut(auth)} color = {'red'}>Sign Out</Menu.Item>
+              </Menu>
               </>
 
               <Group position="center" >
