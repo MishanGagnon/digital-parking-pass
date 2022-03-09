@@ -1,5 +1,12 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+
+const withPWA = require("next-pwa");
+
+module.exports = withPWA({
+  pwa: {
+    dest: "public",
+    register: true,
+    skipWaiting: true,
+  },
   reactStrictMode: true,
   env : {
     API_KEY : "AIzaSyCc-5PRo7pt1N9Az7WxflE0tU1rtB_oCLU",
@@ -10,7 +17,4 @@ const nextConfig = {
     APP_ID : "1:325856591129:web:4c692e76c87fddda855988",
     MEASUREMENT_ID : "G-XPBPVWFPVM"
   }
-  
-}
-
-module.exports = nextConfig
+});

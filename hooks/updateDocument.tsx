@@ -1,6 +1,6 @@
 import { setDoc, doc } from "firebase/firestore"
 import { off } from "process"
-import { db } from "../../firebase/clientApp"
+import { db } from "../firebase/clientApp"
 
 interface requestObj {
     studentID : number,
@@ -10,7 +10,7 @@ interface requestObj {
     name? : string, 
     email? : string
 }
-const useUpdateDocument = async (updateObj : requestObj) => {
+export const updateDocument = async (updateObj : requestObj) => {
     try{
         let requestObject : requestObj= {
             studentID : updateObj.studentID,
@@ -27,5 +27,3 @@ const useUpdateDocument = async (updateObj : requestObj) => {
     }
     return true
 }
-
-export default useUpdateDocument

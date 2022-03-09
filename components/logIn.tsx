@@ -3,7 +3,7 @@ import { signOut } from "firebase/auth"
 import { NextPage } from "next"
 import React from "react"
 import { GoogleLoginButton } from "react-social-login-buttons"
-import { auth } from "../../firebase/clientApp"
+import { auth } from "../firebase/clientApp"
 import { useAuthState, useSignInWithGoogle } from 'react-firebase-hooks/auth'
 
 

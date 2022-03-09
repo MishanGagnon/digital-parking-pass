@@ -1,11 +1,11 @@
 import { CloseButton, Group } from '@mantine/core'
 import { ActionIcon } from '@mantine/core'
-import StudentCard from 'components/StudentCard'
+import StudentCard from '../../components/StudentCard'
 import { collection, doc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
-import useUpdateDocument from 'hooks/useUpdateDocument'
 import React, { useEffect, useState } from 'react'
 import { db } from '../../firebase/clientApp'
 import { motion } from "framer-motion"
+import { updateDocument } from '../../hooks/updateDocument'
 
 interface studentPassRequest{ 
     studentID : number, 
@@ -39,7 +39,7 @@ const Index = () => {
 
     const handleDelete = (studentPass: studentPassRequest ) => {
         studentPass.offCampus = false
-        useUpdateDocument({...studentPass})
+        updateDocument({...studentPass})
     }
 
 

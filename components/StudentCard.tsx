@@ -3,7 +3,6 @@ import { NextPage } from "next"
 import React, { useEffect, useState } from "react"
 import { AiOutlinePlus } from 'react-icons/ai';
 import stylesCss from '../components/component.module.css'
-import useGetName from "hooks/useGetName"
 
 
 interface studentPassRequest {
@@ -56,7 +55,7 @@ const StudentCard: NextPage<Props> = (props) => {
           <Card shadow='lg' className={stylesCss.card} style={styles} >
 
             <Accordion initialItem={props.studentPassType ? 0 : -1}>
-              <AccordionItem label={useGetName(props.studentPassRequest.studentID) + " : " + props.studentPassRequest.studentID}>
+              <AccordionItem label={props.studentPassRequest.name + " : " + props.studentPassRequest.studentID}>
                 <Group>
                   <Image
                     width={120}
@@ -70,7 +69,7 @@ const StudentCard: NextPage<Props> = (props) => {
                       (
                         <Group direction="row">
                           <div>
-                            <h2>{useGetName(props.studentPassRequest.studentID)}</h2>
+                            <h2>{props.studentPassRequest.name}</h2>
                             {props.studentPassRequest.offCampus ? (
                               <>
                                 <Text>Requested at {new Date(props.studentPassRequest.requestTime).toLocaleTimeString()}</Text>

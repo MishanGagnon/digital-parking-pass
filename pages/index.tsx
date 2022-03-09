@@ -1,10 +1,10 @@
 import type { NextPage } from 'next'
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Group, Input, Title } from '@mantine/core';
-import StudentCard from 'components/StudentCard';
-import useUpdateDocument from 'hooks/useUpdateDocument';
+import StudentCard from '../components/StudentCard';
+import { updateDocument } from '../hooks/updateDocument';
 import { collection, getDocs, where, setDoc, doc, Query } from 'firebase/firestore'
-import LogIn from 'components/logIn';
+import LogIn from '../components/logIn';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../firebase/clientApp';
@@ -47,14 +47,14 @@ const Home: NextPage = () => {
     if (studentPass.requestTime === null) { return }
     setStudentPassRequest((prevState) => prevState = { studentID: studentPass.studentID, pickupLocation: studentPass.pickupLocation, requestTime: studentPass.requestTime, offCampus: false, name: studentPass.name, email: studentPass.email })
     studentPass.offCampus = false
-    useUpdateDocument({ ...studentPass })
+    updateDocument({ ...studentPass })
   }
 
   const handleRequestPassButton = (studentPass: studentPassRequest) => {
     if (studentPass.requestTime === null) { return }
     let passRequestTime = new Date().getTime()
     studentPass.offCampus = true
-    useUpdateDocument({ ...studentPass })
+    updateDocument({ ...studentPass })
     setStudentPassRequest({ studentID: studentPass.studentID, pickupLocation: studentPass.pickupLocation, requestTime: passRequestTime, offCampus: true, name: studentPass.name, email: studentPass.email })
   }
 

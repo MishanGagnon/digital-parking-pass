@@ -1,5 +1,4 @@
 import useGetName from "./useGetName"
-import useUpdateDocument from "./useUpdateDocument"
 
 
 const useAddAllUsers = () => {
@@ -1786,7 +1785,7 @@ const useAddAllUsers = () => {
         }
     }
     for (const key in students){
-        useUpdateDocument(parseInt(students[key].id), 'DePaul', 1646181502277, false, students[key].name, students[key].email)
+        ///useUpdateDocument(parseInt(students[key].id), 'DePaul', 1646181502277, false, students[key].name, students[key].email)
     }
 }
 

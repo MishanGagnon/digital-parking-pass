@@ -1,12 +1,10 @@
 import { Button, NumberInput, InputWrapper, NativeSelect, Group } from "@mantine/core"
 import { useInputState } from '@mantine/hooks';
-import useGetName from "hooks/useGetName";
 import { NextPage } from "next"
 import React, {useRef, useState} from "react"
-import { db } from "../../firebase/clientApp";
+import { db } from "../firebase/clientApp";
 import { collection, getDocs, query, where, setDoc, doc } from 'firebase/firestore'
 import styles from '../components/component.module.css'
-import useUpdateDocument from "hooks/useUpdateDocument";
 
 interface Props {
   setStudentPassRequest: React.Dispatch<React.SetStateAction<any>>;
@@ -26,12 +24,12 @@ const Form: NextPage<Props> = (props) => {
         setError(()=>"nice")
         return
       }
-      if(studentIdInput != undefined && useGetName(studentIdInput) === undefined){
+      if(studentIdInput != undefined){
         setError(()=>"Enter valid student ID")
         return
       }
       setError("")
-      useUpdateDocument(studentIdInput, "not selected", getTime())
+      //useUpdateDocument(studentIdInput, "not selected", getTime())
       const userDoc = query(passesCollectionRef, where("studentID", "==",studentIdInput))
       await (await getDocs(userDoc)).forEach(user => {
         console.log(user.data())
