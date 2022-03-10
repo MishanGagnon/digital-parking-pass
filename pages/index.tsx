@@ -9,6 +9,7 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../firebase/clientApp';
 import { query } from 'firebase/firestore';
+import Head from 'next/head';
 
 interface studentPassRequest {
   studentID: number,
@@ -71,9 +72,11 @@ const Home: NextPage = () => {
   }
 
   return (
+    <>
     <LogIn>
       {emailCheck()}
     </LogIn>
+    </>
   )
 }
 

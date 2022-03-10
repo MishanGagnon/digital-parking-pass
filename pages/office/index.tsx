@@ -97,7 +97,7 @@ const Index = () => {
                 })
                 .filter((student : studentPassRequest)=>{
                     if(studentSearch === ""){return student}
-                    return student.name.includes(studentSearch)
+                    return student.name.toLowerCase().includes(studentSearch.toLowerCase())
                 })
                 .map((student : studentPassRequest) => 
             (
