@@ -1,10 +1,11 @@
-import { Button, Container, Group, Text, Image, Center, Menu } from "@mantine/core"
+import { Button, Container, Group, Text, Image, Center, Menu, MediaQuery } from "@mantine/core"
 import { signOut } from "firebase/auth"
 import { NextPage } from "next"
 import React from "react"
 import { GoogleLoginButton } from "react-social-login-buttons"
 import { auth } from "../firebase/clientApp"
 import { useAuthState, useSignInWithGoogle } from 'react-firebase-hooks/auth'
+
 
 
 
@@ -19,16 +20,18 @@ const LogIn: NextPage = ({ children }) => {
         <>
           {
             <div>
-              <>
-              <Menu control = {<Image radius={30} withPlaceholder width={50} src={user.photoURL != null ? user.photoURL : ""}/>} >
-                <Menu.Label>Signed in as {user.displayName}</Menu.Label>
+
+              <Group position="left" direction = "row">
+              <Menu styles = {{body : {marginTop : "4rem"}}} control = {<Image styles = {{imageWrapper: { position: "absolute", left : "1rem", top : "1rem"}}} radius={30} withPlaceholder width={50} src={user.photoURL != null ? user.photoURL : ""}/>} >
+                <Menu.Label >Signed in as {user.displayName}</Menu.Label>
                 <Menu.Item onClick={() => signOut(auth)} color = {'red'}>Sign Out</Menu.Item>
               </Menu>
-              </>
-
-              <Group position="center" >
-                {children}
               </Group>
+              <MediaQuery smallerThan = "sm" styles = {{marginTop : "4rem"}}>
+                <Group position = "center">
+                {children}
+                </Group>
+              </MediaQuery>
             </div>
           }
         </>

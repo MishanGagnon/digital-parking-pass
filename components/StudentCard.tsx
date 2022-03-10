@@ -1,9 +1,9 @@
-import { Accordion, AccordionItem, ActionIcon, Badge, Card, CloseButton, Container, Group, Image, Mark, NativeSelect, Text, Transition } from "@mantine/core"
+import { Accordion, AccordionItem, ActionIcon, Badge, Button, Card, CloseButton, Container, Group, Image, Mark, Modal, NativeSelect, Text, Transition } from "@mantine/core"
 import { NextPage } from "next"
 import React, { useEffect, useState } from "react"
-import { AiOutlinePlus } from 'react-icons/ai';
+import { AiOutlineBarcode, AiOutlinePlus } from 'react-icons/ai';
 import stylesCss from '../components/component.module.css'
-
+import Barcode from 'react-barcode'
 
 interface studentPassRequest {
   studentID: number,
@@ -24,6 +24,7 @@ interface Props {
 
 const StudentCard: NextPage<Props> = (props) => {
   const [mounted, setMounted] = useState(false)
+  const [barcodeModalOpen, setBarcodeModalOpen] = useState(false)
   useEffect(() => {
     if(props.studentPassType && props.setStudentPassRequest != undefined){
       props.setStudentPassRequest((prevState) => {prevState.pickupLocation = 'LaSalle'; return prevState})
@@ -96,7 +97,17 @@ const StudentCard: NextPage<Props> = (props) => {
                                 <ActionIcon size='xl' color='green' onClick={() => { props.requestPassButton(props.studentPassRequest) }} variant="filled"><AiOutlinePlus style={{ width: '26px', height: '26px' }} /></ActionIcon>                            </>
                               )
                               :
-                              (<CloseButton size='xl' color='red' variant='filled' onClick={() => { conditionalExitHandler() }} />)
+                              (<>
+                              {!props.studentPassType ? (
+                              <>
+                              <Modal title = {`StudentID barcode for ${props.studentPassRequest.name}`} styles = {{body : {display : "flex", justifyContent : "center"}}} centered opened={barcodeModalOpen} onClose={() => setBarcodeModalOpen(false)}>
+                                <Barcode displayValue = {false} format = {"CODE39"} value = {props.studentPassRequest.studentID.toString()}/>
+                              </Modal>
+                              <ActionIcon size='xl' color='gray' onClick={() => {setBarcodeModalOpen(true)}} variant="filled"><AiOutlineBarcode style={{ width: '26px', height: '26px' }} /></ActionIcon> 
+                              </>
+                              ) : ''}
+                              <CloseButton size='xl' color='red' variant='filled' onClick={() => { conditionalExitHandler() }} />
+                              </>)
                           }
                         </Group>
                       )
