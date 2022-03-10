@@ -99,6 +99,7 @@ const Index = () => {
                     if(studentSearch === ""){return student}
                     return student.name.toLowerCase().includes(studentSearch.toLowerCase())
                 })
+                .reverse()
                 .map((student : studentPassRequest) => 
             (
                     // maps through firebase document and loads all students
