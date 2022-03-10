@@ -3,7 +3,7 @@ import { NextPage } from "next"
 import React, { useEffect, useState } from "react"
 import { AiOutlineBarcode, AiOutlinePlus } from 'react-icons/ai';
 import stylesCss from '../components/component.module.css'
-import Barcode from 'react-barcode'
+import Barcode from "react-barcode"
 
 interface studentPassRequest {
   studentID: number,
@@ -25,6 +25,7 @@ interface Props {
 const StudentCard: NextPage<Props> = (props) => {
   const [mounted, setMounted] = useState(false)
   const [barcodeModalOpen, setBarcodeModalOpen] = useState(false)
+
   useEffect(() => {
     if(props.studentPassType && props.setStudentPassRequest != undefined){
       props.setStudentPassRequest((prevState) => {prevState.pickupLocation = 'LaSalle'; return prevState})
