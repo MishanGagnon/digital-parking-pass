@@ -19,7 +19,7 @@ export default function StudentCardDetails(props : Props): ReactElement {
     <div>
       <Text>
         Currently{" "}
-        <Badge color={color}>
+        <Badge size = 'lg' color={color}>
           {text}
         </Badge>
       </Text>

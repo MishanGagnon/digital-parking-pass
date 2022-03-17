@@ -6,4 +6,6 @@
 
 .card { 
   width: clamp(20rem, auto, 70rem);
+  display: flex;
+  flex-direction: row;
 }

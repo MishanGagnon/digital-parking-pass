@@ -8,6 +8,7 @@ import StudentCardDetails from "./StudentCardDetails";
 import StudentCardButtons from "./StudentCardButtons";
 import StudentCardBadge from "./StudentCardBadge";
 import { studentPassRequestInterface } from "index";
+import { updateDocument } from "../../hooks/updateDocument";
 
 
 interface Props {
@@ -22,7 +23,7 @@ interface Props {
 const StudentCard: NextPage<Props> = (props) => {
   const [mounted, setMounted] = useState(false)
   const [barcodeModalOpen, setBarcodeModalOpen] = useState(false)
-
+  const [isAccordianOpen, setIsAccordionOpen] = useState(false)
   useEffect(() => {
     if(props.studentPassType && props.setStudentPassRequest != undefined){
       props.setStudentPassRequest((prevState) => {prevState.pickupLocation = 'LaSalle'; return prevState})
@@ -34,16 +35,30 @@ const StudentCard: NextPage<Props> = (props) => {
     props.buttonFunction(props.studentPassRequest)
   }
 
+  const submitPassRequest = (studentPass: studentPassRequestInterface) => {
+    let passRequestTime = new Date().getTime()
+    studentPass.isPassApprovalRequested = false
+    studentPass.offCampus = true
+    studentPass.requestTime = passRequestTime
+    updateDocument({ ...studentPass })
+  }
+  const declinePassRequest = (studentPass: studentPassRequestInterface) => {
+    let passRequestTime = new Date().getTime()
+    studentPass.isPassApprovalRequested = false
+    studentPass.offCampus = false
+    studentPass.requestTime = passRequestTime
+    updateDocument({ ...studentPass })
+  }
 
   //add student id to student card
   return (
     <div className={stylesCss.container}>
       <Transition mounted={mounted} onExited={() => { exitFunction() }} transition="slide-right" duration={400} timingFunction="ease">
         {(styles) => (
-          <Card shadow='lg' className={stylesCss.card} style={styles} >
+          <Card sx = {{backgroundColor : props.studentPassRequest.isPassApprovalRequested ? '#fcffdf' : undefined}} shadow='lg' className={stylesCss.card} style={styles} >
 
-            <Accordion initialItem={props.studentPassType ? 0 : -1}>
-              <AccordionItem label={props.studentPassRequest.name + " : " + props.studentPassRequest.studentID}>
+            <Accordion  initialItem={props.studentPassType ? 0 : -1} onChange = {()=>{setIsAccordionOpen((prevState)=> prevState = !prevState)}}>
+              <AccordionItem  label={props.studentPassRequest.name + " : " + props.studentPassRequest.studentID}>
                 <Group>
                   <Image
                     width={120}
@@ -68,8 +83,32 @@ const StudentCard: NextPage<Props> = (props) => {
                 </Group>
               </AccordionItem>
             </Accordion>
+            <Group direction = 'row'>
+            {!props.studentPassType && props.studentPassRequest.isPassApprovalRequested && !isAccordianOpen ? (
+              <>
+              <ActionIcon
+                size="xl"
+                color="green"
+                onClick={() => {
+                  submitPassRequest(props.studentPassRequest);
+                }}
+                variant="filled"
+              >
+                <AiOutlinePlus style={{ width: "26px", height: "26px" }} />
+              </ActionIcon>
+                  <CloseButton
+                size="xl"
+                color="red"
+                variant="filled"
+                onClick={() => {
+                  declinePassRequest(props.studentPassRequest);
+                }}
+              />
+              </>
+            ) : 
+            ''}
+            </Group>
           </Card>
-
         )}
       </Transition>
     </div>

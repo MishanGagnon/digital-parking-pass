@@ -93,7 +93,7 @@ const clipboard = useClipboard({ timeout: 500 });
               color="red"
               variant="filled"
               onClick={() => {
-                conditionalExitHandler();
+                declinePassRequest(props.studentPassRequest);
               }}
             />
         )}
