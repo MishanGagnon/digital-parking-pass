@@ -89,10 +89,10 @@ const Index = () => {
     },[])
 
     const emailCheck = () => {
-        if (user) {
-          let userEmail = user.email
+      if (user) {
+        let userEmail = user.email
           if(userEmail == null){return}
-          if (userEmail.split('@')[1] === "shcp.edu" && (parseInt(userEmail.slice(0,3)) === NaN || userEmail === "22mgagnon@shcp.edu")) {
+          if (userEmail.split('@')[1] === "shcp.edu" && (Number.isNaN(parseInt(userEmail.slice(0,3))) || userEmail === "22mgagnon@shcp.edu")) {
             return (
             <Group direction = "column" position = "center" style = {{backgroundColor  : ""}}>
             <h1 style = {{textAlign : "center"}}>Students Currently off Campus </h1>
@@ -108,10 +108,14 @@ const Index = () => {
                 onChange = {(val)=>{if(val){setCampusSelect(val)}}}
                 />
             </Group>
+            <Group direction = 'row'>
+              <div>
+
                 {recievedData && firebaseData.length != 0 ? (firebaseData.filter((student: studentPassRequest) => {
                     if(campusSelect === ""){return student}
                     return student.pickupLocation === campusSelect
                 })
+                .filter((student : studentPassRequest) => !student.isPassApprovalRequested)
                 .filter((student : studentPassRequest)=>{
                     if(studentSearch === ""){return student}
                     return student.name.toLowerCase().includes(studentSearch.toLowerCase())
@@ -125,6 +129,24 @@ const Index = () => {
                     </Group>
             )
             )) : ""}
+              </div>
+              <div>
+              {recievedData && firebaseData.length != 0 ? (firebaseData.filter((student: studentPassRequest) => {
+                  if(campusSelect === ""){return student}
+                  return student.pickupLocation === campusSelect
+              })
+              .filter((student : studentPassRequest) => student.isPassApprovalRequested)
+              .reverse()
+              .map((student : studentPassRequest) => 
+          (
+                  // maps through firebase document and loads all students
+                  <Group direction = "row" key={student.studentID} position = "center" >
+                      <StudentCard studentPassType = {false} studentPassRequest = {student} buttonFunction = {handleDelete}/>
+                  </Group>
+          )
+          )) : ""}
+              </div>
+            </Group>
             </Group>)
           } else {
             return (<Title align="center">Use SHC faculty account to access</Title>)

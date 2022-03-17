@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Badge,
   CloseButton,
+  Group,
   Modal,
   NativeSelect,
   Text,
@@ -16,9 +17,7 @@ import { updateDocument } from "../../hooks/updateDocument";
 interface Props {
   studentPassRequest: studentPassRequestInterface;
   studentPassType: boolean;
-  setStudentPassRequest: React.Dispatch<
-    React.SetStateAction<studentPassRequestInterface>
-  >;
+  setStudentPassRequest: React.Dispatch<React.SetStateAction<studentPassRequestInterface>> | undefined
   requestPassButton: any;
   setMounted: React.Dispatch<React.SetStateAction<boolean>>;
   buttonFunction: any;
@@ -53,10 +52,17 @@ const clipboard = useClipboard({ timeout: 500 });
     studentPass.requestTime = passRequestTime
     updateDocument({ ...studentPass })
   }
+  const declinePassRequest = (studentPass: studentPassRequestInterface) => {
+    let passRequestTime = new Date().getTime()
+    studentPass.isPassApprovalRequested = false
+    studentPass.offCampus = false
+    studentPass.requestTime = passRequestTime
+    updateDocument({ ...studentPass })
+  }
 
   function Student(): ReactElement {
     return (
-      <div>
+      <Group direction = 'row'>
         {!props.studentPassRequest.offCampus && !props.studentPassRequest.isPassApprovalRequested ? (
           <>
             <NativeSelect
@@ -91,7 +97,7 @@ const clipboard = useClipboard({ timeout: 500 });
               }}
             />
         )}
-      </div>
+      </Group>
     );
   }
 
@@ -142,7 +148,7 @@ const clipboard = useClipboard({ timeout: 500 });
               color="red"
               variant="filled"
               onClick={() => {
-                conditionalExitHandler();
+                declinePassRequest(props.studentPassRequest);
               }}
             />
             </>

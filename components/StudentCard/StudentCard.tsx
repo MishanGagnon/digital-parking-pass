@@ -7,24 +7,15 @@ import Barcode from "react-barcode"
 import StudentCardDetails from "./StudentCardDetails";
 import StudentCardButtons from "./StudentCardButtons";
 import StudentCardBadge from "./StudentCardBadge";
+import { studentPassRequestInterface } from "index";
 
-interface studentPassRequest {
-  studentID: number,
-  pickupLocation: string,
-  requestTime: number
-  offCampus: boolean
-  name: string 
-  email: string
-  isPassApprovalRequested: boolean,
-  isPassApproved: boolean,
-}
 
 interface Props {
-  studentPassRequest: studentPassRequest
+  studentPassRequest: studentPassRequestInterface
   studentPassType: boolean
   buttonFunction: any
   requestPassButton?: any
-  setStudentPassRequest?: React.Dispatch<React.SetStateAction<studentPassRequest>>
+  setStudentPassRequest?: React.Dispatch<React.SetStateAction<studentPassRequestInterface>>
 }
 
 

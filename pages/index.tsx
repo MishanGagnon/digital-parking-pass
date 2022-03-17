@@ -1,9 +1,9 @@
 import type { NextPage } from 'next'
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Group, Input, Title } from '@mantine/core';
+import { Title } from '@mantine/core';
 import StudentCard from '../components/StudentCard/StudentCard';
 import { updateDocument } from '../hooks/updateDocument';
-import { collection, getDocs, where, setDoc, doc, Query } from 'firebase/firestore'
+import { collection, getDocs, where, setDoc, doc, Query, onSnapshot } from 'firebase/firestore'
 import LogIn from '../components/logIn';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -34,10 +34,15 @@ const Home: NextPage = () => {
     if (loading) { console.log(loading, "loading"); return }
     if (error) { console.log(error, "error"); return }
     if (user) {
-      getDocument(user)
-    }
+      getStudents()
+      }
   }, [user])
 
+  useEffect(()=>{
+    if(studentPassRequest.studentID != 0){
+      setPassRequested(true)
+    }
+  },[studentPassRequest])
   const getDocument = async (user: User) => {
     let userDoc = await query(collection(db, "passes"), where("email", "==", user.email))
     let studentDoc = await getDocs(userDoc)
@@ -47,6 +52,26 @@ const Home: NextPage = () => {
     })
     setPassRequested(true)
   }
+  const getStudents = async () => {
+    //add where for where pass requested
+    if(user){
+      const q1 = query(collection(db, "passes"), where("email", "==", user.email));
+          const unsubscribe1 = onSnapshot(q1, (querySnapshot) => {
+          querySnapshot.docChanges().forEach((change) => {
+            console.log(typeof change.doc.data(),"hi")
+                  if (change.type === "added") {
+                    setStudentPassRequest((prevState) => prevState = change.doc.data() as studentPassRequestInterface)
+                  }
+                  if (change.type === "modified") {
+                    setStudentPassRequest((prevState) => prevState = change.doc.data() as studentPassRequestInterface)
+                  }
+                  if(change.type === "removed") { 
+                    setStudentPassRequest((prevState) => prevState = change.doc.data() as studentPassRequestInterface)
+                  }
+              });
+          }); 
+        }
+    }
   const handleDelete = (studentPass: studentPassRequestInterface) => {
     if (studentPass.requestTime === null) { return }
     setStudentPassRequest((prevState) => prevState = { studentID: studentPass.studentID, pickupLocation: studentPass.pickupLocation, requestTime: studentPass.requestTime, offCampus: false, name: studentPass.name, email: studentPass.email, isPassApprovalRequested : studentPass.isPassApprovalRequested, isPassApproved : studentPass.isPassApproved })
