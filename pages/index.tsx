@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Group, Input, Title } from '@mantine/core';
-import StudentCard from '../components/StudentCard';
+import StudentCard from '../components/StudentCard/StudentCard';
 import { updateDocument } from '../hooks/updateDocument';
 import { collection, getDocs, where, setDoc, doc, Query } from 'firebase/firestore'
 import LogIn from '../components/logIn';
@@ -10,19 +10,22 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../firebase/clientApp';
 import { query } from 'firebase/firestore';
 import Head from 'next/head';
+import StudentPassRequest from '../components/StudentCard/StudentCard'
 
-interface studentPassRequest {
+export interface studentPassRequestInterface {
   studentID: number,
-  pickupLocation: string
+  pickupLocation: string,
   requestTime: number
   offCampus: boolean
-  name: string
+  name: string 
   email: string
+  isPassApprovalRequested: boolean,
+  isPassApproved: boolean,
 }
 
 
 const Home: NextPage = () => {
-  const [studentPassRequest, setStudentPassRequest] = useState<studentPassRequest>({ studentID: 0, pickupLocation: "", requestTime: 0, offCampus: false, name: "", email: "" })
+  const [studentPassRequest, setStudentPassRequest] = useState<studentPassRequestInterface>({ studentID: 0, pickupLocation: "", requestTime: 0, offCampus: false, name: "", email: "", isPassApprovalRequested : false, isPassApproved : false})
   const [passRequested, setPassRequested] = useState<boolean>(false)
   const [user, loading, error] = useAuthState(auth)
 
@@ -40,23 +43,26 @@ const Home: NextPage = () => {
     let studentDoc = await getDocs(userDoc)
     studentDoc.forEach(student => {
       console.log(student.data(), "get doc user data")
-      setStudentPassRequest((prevState) => prevState = student.data() as studentPassRequest)
+      setStudentPassRequest((prevState) => prevState = student.data() as studentPassRequestInterface)
     })
     setPassRequested(true)
   }
-  const handleDelete = (studentPass: studentPassRequest) => {
+  const handleDelete = (studentPass: studentPassRequestInterface) => {
     if (studentPass.requestTime === null) { return }
-    setStudentPassRequest((prevState) => prevState = { studentID: studentPass.studentID, pickupLocation: studentPass.pickupLocation, requestTime: studentPass.requestTime, offCampus: false, name: studentPass.name, email: studentPass.email })
+    setStudentPassRequest((prevState) => prevState = { studentID: studentPass.studentID, pickupLocation: studentPass.pickupLocation, requestTime: studentPass.requestTime, offCampus: false, name: studentPass.name, email: studentPass.email, isPassApprovalRequested : studentPass.isPassApprovalRequested, isPassApproved : studentPass.isPassApproved })
     studentPass.offCampus = false
     updateDocument({ ...studentPass })
   }
 
-  const handleRequestPassButton = (studentPass: studentPassRequest) => {
+  const handleRequestPassButton = (studentPass: studentPassRequestInterface) => {
+    console.log(studentPass, "studentPass")
     if (studentPass.requestTime === null) { return }
     let passRequestTime = new Date().getTime()
-    studentPass.offCampus = true
+    setStudentPassRequest((prevState) => prevState = { studentID: studentPass.studentID, pickupLocation: studentPass.pickupLocation, requestTime: passRequestTime, offCampus: studentPass.offCampus, name: studentPass.name, email: studentPass.email, isPassApprovalRequested : true, isPassApproved : studentPass.isPassApproved })
+    studentPass.isPassApprovalRequested = true
+    /* setStudentPassRequest((prevState) => prevState = { studentID: studentPass.studentID, pickupLocation: studentPass.pickupLocation, requestTime: passRequestTime, offCampus: true, name: studentPass.name, email: studentPass.email, isPassApprovalRequested : studentPass.isPassApprovalRequested, isPassApproved : studentPass.isPassApproved })
+    studentPass.offCampus = true */
     updateDocument({ ...studentPass })
-    setStudentPassRequest({ studentID: studentPass.studentID, pickupLocation: studentPass.pickupLocation, requestTime: passRequestTime, offCampus: true, name: studentPass.name, email: studentPass.email })
   }
 
   const emailCheck = () => {

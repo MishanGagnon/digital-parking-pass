@@ -1,6 +1,6 @@
 import { CloseButton, Divider, Group, Select, TextInput, Title } from '@mantine/core'
 import { ActionIcon } from '@mantine/core'
-import StudentCard from '../../components/StudentCard'
+import StudentCard from '../../components/StudentCard/StudentCard'
 import { collection, doc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { auth, db } from '../../firebase/clientApp'
@@ -8,14 +8,16 @@ import { motion } from "framer-motion"
 import { updateDocument } from '../../hooks/updateDocument'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import LogIn from '../../components/logIn'
-interface studentPassRequest{ 
-    studentID : number, 
-    pickupLocation : string
-    requestTime : number
-    offCampus : boolean
-    name : string
-    email : string
-  }
+interface studentPassRequest {
+  studentID: number,
+  pickupLocation: string,
+  requestTime: number
+  offCampus: boolean
+  name: string 
+  email: string
+  isPassApprovalRequested: boolean,
+  isPassApproved: boolean,
+}
 
 
 const passesCollectionRef = query(collection(db, "passes"), where("offCampus", "==", true))
@@ -52,8 +54,23 @@ const Index = () => {
         
         //turn this into a hook somehow?
         const getStudents = async () => {
-            const q = query(collection(db, "passes"), where("offCampus", "==", true));
-            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          //add where for where pass requested
+          const q1 = query(collection(db, "passes"), where("isPassApprovalRequested", "==", true),);
+            const unsubscribe1 = onSnapshot(q1, (querySnapshot) => {
+            querySnapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        setFirebaseData((prevState: any) => [...prevState, change.doc.data()])
+                    }
+                    if (change.type === "modified") {
+                        setFirebaseData((prevState : studentPassRequest[]) => {return [...prevState.filter((student : studentPassRequest) => {return change.doc.data().studentID != student.studentID}), change.doc.data()]})
+                    }
+                    if(change.type === "removed") { 
+                        setFirebaseData((prevState : studentPassRequest[]) => {return [...prevState.filter((student : studentPassRequest) => {return change.doc.data().studentID != student.studentID})]})
+                    }
+                });
+            }); 
+            const q2 = query(collection(db, "passes"), where("offCampus", "==", true),);
+            const unsubscribe2 = onSnapshot(q2, (querySnapshot) => {
             querySnapshot.docChanges().forEach((change) => {
                     if (change.type === "added") {
                         setFirebaseData((prevState: any) => [...prevState, change.doc.data()])

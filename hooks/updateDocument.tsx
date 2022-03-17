@@ -8,9 +8,12 @@ interface requestObj {
     requestTime : number,
     offCampus? : boolean,
     name? : string, 
-    email? : string
+    email? : string,
+    isPassApprovalRequested? : boolean,
+    isPassApproved? : boolean
 }
 export const updateDocument = async (updateObj : requestObj) => {
+    console.log(updateObj, "updateObj")
     try{
         let requestObject : requestObj= {
             studentID : updateObj.studentID,
@@ -20,7 +23,9 @@ export const updateDocument = async (updateObj : requestObj) => {
         updateObj.offCampus != undefined ? requestObject.offCampus = updateObj.offCampus : '';
         updateObj.name ? requestObject.name = updateObj.name : '';
         updateObj.email ? requestObject.email = updateObj.email : '';
-        console.log(requestObject)
+        updateObj.isPassApprovalRequested != undefined ? requestObject.isPassApprovalRequested = updateObj.isPassApprovalRequested:  ''
+        updateObj.isPassApproved != undefined ? requestObject.isPassApproved = updateObj.isPassApproved : ''
+        console.log(requestObject, "request")
         await setDoc(doc(db, "passes", updateObj.studentID.toString()), requestObject)
     }catch{
         return false
